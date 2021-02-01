@@ -1,5 +1,7 @@
-ARG BASEIMAGE=registry.access.redhat.com/ubi8/ubi-minimal:8.1
-FROM $BASEIMAGE
+ARG CMRELOAD_IMAGE
+FROM ${CMRELOAD_IMAGE} as CMRELOAD
+
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
 
 COPY ./LICENSE.txt /licenses/
 
@@ -9,7 +11,7 @@ ARG BINARY=configmap-reload
 ARG VERSION
 ARG RELEASE
 
-COPY out/$BINARY /configmap-reload
+COPY --from=CMRELOAD /configmap-reload /configmap-reload
 
 LABEL name="configmap-reload" \
     version="${VERSION}" \
